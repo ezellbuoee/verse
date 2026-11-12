@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "verse.name" . }}-server
+  labels: {{- include "verse.labels" . | nindent 4 }}
+spec:
+  selector: {{- include "verse.selector" . | nindent 4 }}
+    app.kubernetes.io/component: server
+  ports: [ { name: http, port: 8080, targetPort: http } ]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "verse.name" . }}-server
+  labels: {{- include "verse.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.server.replicas }}
+  selector:
+    matchLabels: {{- include "verse.selector" . | nindent 6 }}
+      app.kubernetes.io/component: server
+  template:
+    metadata:
+      labels: {{- include "verse.selector" . | nindent 8 }}
+        app.kubernetes.io/component: server
+    spec:
+      {{- with .Values.image.pullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        {{- include "verse.waitForDb" . | nindent 8 }}
+      containers:
+        - name: server
+          image: {{ include "verse.image" (dict "root" . "name" .Values.image.server) }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext: {{- include "verse.containerSecurity" . | nindent 12 }}
+          env:
+            - { name: SPRING_PROFILES_ACTIVE, value: prod }
+            - { name: JAVA_OPTS, value: {{ .Values.server.javaOpts | quote }} }
+            - { name: VERSE_DB_URL, value: "jdbc:postgresql://{{ include "verse.pgHost" . }}:{{ include "verse.pgPort" . }}/{{ .Values.postgres.database }}" }
+            - { name: VERSE_DB_USERNAME, value: {{ .Values.postgres.username | quote }} }
+            - { name: VERSE_DB_PASSWORD, valueFrom: { secretKeyRef: { name: {{ include "verse.name" . }}-db, key: password } } }
+            - { name: VERSE_JWT_SECRET, valueFrom: { secretKeyRef: { name: {{ include "verse.name" . }}-app, key: jwtSecret } } }
+            - { name: VERSE_TOKEN_TTL, value: {{ .Values.auth.tokenTtl | quote }} }
+            - { name: VERSE_PUBLIC_URL, value: {{ .Values.publicUrl | quote }} }
+            - { name: VERSE_SEED_CLASSICS, value: {{ .Values.seed.classics | quote }} }
+            {{- if .Values.bootstrapAdmin.email }}
+            - { name: VERSE_ADMIN_EMAIL, valueFrom: { secretKeyRef: { name: {{ include "verse.name" . }}-app, key: adminEmail } } }
+            - { name: VERSE_ADMIN_PASSWORD, valueFrom: { secretKeyRef: { name: {{ include "verse.name" . }}-app, key: adminPassword } } }
+            - { name: VERSE_ADMIN_NAME, value: {{ .Values.bootstrapAdmin.displayName | quote }} }
+            {{- end }}
+            {{- with .Values.server.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          ports: [ { name: http, containerPort: 8080 } ]
+          startupProbe:
+            httpGet: { path: /actuator/health/liveness, port: http }
+            periodSeconds: 5
+            failureThreshold: 60
+          readinessProbe:
+            httpGet: { path: /actuator/health/readiness, port: http }
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: { path: /actuator/health/liveness, port: http }
+            periodSeconds: 30
+          resources: {{- toYaml .Values.server.resources | nindent 12 }}
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - { name: tmp, emptyDir: {} }

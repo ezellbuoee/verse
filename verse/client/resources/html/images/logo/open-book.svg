@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Verse">
+  <!-- B: two pages opening into a V, with a line of verse -->
+  <path d="M16 34 C34 28 48 30 58 40 L58 96 C48 88 34 86 16 92 Z" fill="currentColor"/>
+  <path d="M104 34 C86 28 72 30 62 40 L62 96 C72 88 86 86 104 92 Z" fill="currentColor" opacity="0.72"/>
+  <path d="M26 52 H48 M26 62 H44 M26 72 H48" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+  <path d="M60 40 L60 96" stroke="currentColor" stroke-width="2"/>
+</svg>

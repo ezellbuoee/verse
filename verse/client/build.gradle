@@ -1,0 +1,41 @@
+plugins {
+    alias(gradlePluginLibs.plugins.node.gradle)
+}
+
+tasks.register('compile', NpmTask) {
+    group 'build'
+    description 'Type-checks, lints and checks formatting of the client.'
+    dependsOn npmInstall
+    args = skipLintFormat.toBoolean() ? ['run-script', 'typecheck'] : ['run-script', 'compile']
+}
+
+tasks.register('webpack', NpmTask) {
+    group 'build'
+    description 'Builds the production bundle into client/build/webpack.'
+    dependsOn compile
+    args = ['run-script', 'webpack']
+}
+
+tasks.register('start', NpmTask) {
+    description 'Starts the webpack dev server on http://localhost:8020 (API proxied to http://localhost:8082).'
+    dependsOn 'stop', npmInstall
+    args = ['run-script', 'start']
+}
+
+tasks.register('stop', NodeTask) {
+    description 'Stops whatever runs on the dev server port.'
+    script = file('scripts/kill-port.js')
+}
+
+tasks.register('formatFix', NpmTask) {
+    description 'Fixes format issues highlighted by prettier.'
+    args = ['run-script', 'format:fix']
+}
+
+tasks.register('lintFix', NpmTask) {
+    description 'Fixes lint issues highlighted by eslint.'
+    args = ['run-script', 'lint:fix']
+}
+
+tasks.named('assemble').configure { dependsOn('webpack') }
+tasks.named('check').configure { dependsOn('compile') }

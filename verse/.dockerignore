@@ -1,0 +1,10 @@
+**/node_modules
+**/build
+**/.gradle
+.git
+.idea
+server/data
+e2e/test-results
+e2e/playwright-report
+compose/.env.prod
+import

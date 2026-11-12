@@ -1,0 +1,53 @@
+# Serves the built client and forwards /api to the Verse server.
+# ${VERSE_SERVER_URL} is filled in at container start by the nginx image (e.g. http://verse-server:8080).
+
+# Behind an ingress or load balancer that terminates TLS, keep the scheme the browser used, so the server sees the
+# same origin as the browser (CORS and redirects depend on it).
+map $http_x_forwarded_proto $verse_forwarded_proto {
+    default $http_x_forwarded_proto;
+    ""      $scheme;
+}
+
+server {
+    listen 8020;
+    server_name _;
+    root /usr/share/nginx/html;
+    client_max_body_size 1m;
+
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_types text/plain text/css application/javascript application/json image/svg+xml;
+
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+    add_header X-Frame-Options DENY always;
+    # (no add_header inside the locations below, or these would not be sent there)
+
+    # hashed bundles never change: cache them for a year
+    location ~* \.(?:js|css|woff2?|png|svg)$ {
+        try_files $uri =404;
+        expires 1y;
+    }
+
+    # deep links (/poems/<id>, /poets/<id>, /chats) are rendered by the app
+    location / {
+        try_files $uri $uri/ /index.html;
+        expires -1;
+    }
+
+    # the client waits for the server at startup; only health is passed through
+    location = /api/actuator/health {
+        proxy_pass ${VERSE_SERVER_URL}/actuator/health;
+    }
+
+    location /api/ {
+        proxy_pass ${VERSE_SERVER_URL};
+        # $http_host keeps the port (localhost:8020, a port-forward); $host would drop it
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $verse_forwarded_proto;
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_read_timeout 60s;
+    }
+}

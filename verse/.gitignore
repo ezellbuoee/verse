@@ -1,0 +1,45 @@
+# Tools / IDE
+.classpath
+.project
+.settings
+.idea
+.sdkmanrc
+**/*.iml
+
+# Dev configs
+**/developer.properties
+
+# Build tools
+**/.gradle/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Build directories
+**/build
+**/bin
+**/out
+**/target
+**/node_modules
+**/lib
+**/.npm
+
+# Log files
+*.log
+*.gz
+*.tgz
+
+# Other
+**/*.bak
+*.txt
+.DS_Store
+
+# Verse production secrets
+compose/.env.prod
+# local secrets from 1.x, never commit them
+import/
+
+# Verse local data and test output
+/server/data/
+e2e/test-results/
+e2e/playwright-report/

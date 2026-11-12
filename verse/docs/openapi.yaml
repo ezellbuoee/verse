@@ -1,0 +1,1013 @@
+openapi: 3.1.0
+info:
+  title: Verse API
+  description: "A community of posts (poems and quotes), authors, hearts, comments,\
+    \ chats and moderation. Public reads under /api/v1, the signed-in member's actions\
+    \ under /api/v1/me, moderation under /api/v1/admin. Lists are pages, errors are\
+    \ application/problem+json."
+  version: v1
+servers:
+- url: http://localhost:8082
+  description: Generated server url
+tags:
+- name: Admin
+  description: "Reports, removals and members. Admin role required."
+- name: Me
+  description: "The signed-in member: profile, posts, hearts, comments, chats, reports,\
+    \ account."
+- name: Content
+  description: "Posts, authors and the daily selection. Public."
+- name: Account
+  description: Joining and signing in.
+paths:
+  /api/v1/me/likes/{postId}:
+    put:
+      tags:
+      - Me
+      summary: Give a heart
+      operationId: like
+      parameters:
+      - name: postId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Like"
+      security:
+      - bearer: []
+    delete:
+      tags:
+      - Me
+      summary: Take the heart back
+      operationId: unlike
+      parameters:
+      - name: postId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Like"
+      security:
+      - bearer: []
+  /api/v1/signup:
+    post:
+      tags:
+      - Account
+      summary: Create an account
+      description: Email becomes the login name. The person must be 18+.
+      operationId: signup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Signup"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+  /api/v1/me/reports:
+    post:
+      tags:
+      - Me
+      summary: Report a post to the admins
+      operationId: report
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewReport"
+        required: true
+      responses:
+        "200":
+          description: OK
+      security:
+      - bearer: []
+  /api/v1/me/posts:
+    post:
+      tags:
+      - Me
+      summary: Publish a post
+      operationId: createPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewPost"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+      security:
+      - bearer: []
+  /api/v1/me/deletion:
+    post:
+      tags:
+      - Me
+      summary: Delete my account and everything I wrote
+      description: Needs the password again.
+      operationId: deleteAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountDeletion"
+        required: true
+      responses:
+        "200":
+          description: OK
+      security:
+      - bearer: []
+  /api/v1/me/conversations/{memberId}/messages:
+    post:
+      tags:
+      - Me
+      summary: Send a message
+      operationId: send
+      parameters:
+      - name: memberId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewMessage"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+      security:
+      - bearer: []
+  /api/v1/me/comments:
+    post:
+      tags:
+      - Me
+      summary: Comment on a post
+      operationId: comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewComment"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+      security:
+      - bearer: []
+  /api/v1/auth/login:
+    post:
+      tags:
+      - Account
+      summary: Sign in
+      description: Answers 401 with a readable detail when email and password do not
+        match. Signing out is forgetting the token.
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Login"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
+  /api/v1/admin/reports/{reportId}/dismiss:
+    post:
+      tags:
+      - Admin
+      summary: "Dismiss a report, the post stays"
+      operationId: dismiss
+      parameters:
+      - name: reportId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      security:
+      - bearer: []
+  /api/v1/me:
+    get:
+      tags:
+      - Me
+      summary: Who am I
+      operationId: me
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Me"
+      security:
+      - bearer: []
+    patch:
+      tags:
+      - Me
+      summary: Change display name and bio
+      operationId: updateProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileUpdate"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Me"
+      security:
+      - bearer: []
+  /api/v1/admin/members/{memberId}:
+    patch:
+      tags:
+      - Admin
+      summary: Change a member's role or status
+      description: Suspended members cannot sign in and their tokens stop working
+        at once.
+      operationId: changeMember
+      parameters:
+      - name: memberId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberChange"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberAdmin"
+      security:
+      - bearer: []
+  /api/v1/posts:
+    get:
+      tags:
+      - Content
+      summary: List posts
+      description: Newest first unless sort=loved. All filters combine.
+      operationId: posts
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        description: 1-60
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 24
+      - name: sort
+        in: query
+        description: newest | loved
+        required: false
+        schema:
+          type: string
+          default: newest
+      - name: kind
+        in: query
+        description: POEM | QUOTE
+        required: false
+        schema:
+          type: string
+      - name: mood
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: author
+        in: query
+        description: Author id
+        required: false
+        schema:
+          type: string
+      - name: q
+        in: query
+        description: "Search words, all must match"
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Page"
+  /api/v1/posts/{postId}:
+    get:
+      tags:
+      - Content
+      summary: One post
+      operationId: post
+      parameters:
+      - name: postId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+  /api/v1/posts/{postId}/comments:
+    get:
+      tags:
+      - Content
+      summary: "Comments of a post, oldest first"
+      operationId: comments
+      parameters:
+      - name: postId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 60
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Page"
+  /api/v1/me/summary:
+    get:
+      tags:
+      - Me
+      summary: What deleting the account would remove
+      operationId: summary
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountSummary"
+      security:
+      - bearer: []
+  /api/v1/me/likes:
+    get:
+      tags:
+      - Me
+      summary: Ids of the posts I gave a heart
+      operationId: likes
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+      security:
+      - bearer: []
+  /api/v1/me/conversations:
+    get:
+      tags:
+      - Me
+      summary: "My chats, newest first, with the unread total"
+      operationId: conversations
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversations"
+      security:
+      - bearer: []
+  /api/v1/me/conversations/{memberId}:
+    get:
+      tags:
+      - Me
+      summary: The chat with one member
+      description: Reading marks their messages as read.
+      operationId: conversation
+      parameters:
+      - name: memberId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+      security:
+      - bearer: []
+  /api/v1/daily:
+    get:
+      tags:
+      - Content
+      summary: The day's selection for the front page
+      description: "Same for everyone, changes every day at midnight UTC."
+      operationId: daily
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Daily"
+  /api/v1/authors:
+    get:
+      tags:
+      - Content
+      summary: "List authors, most active first"
+      operationId: authors
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 40
+      - name: q
+        in: query
+        description: Part of the name
+        required: false
+        schema:
+          type: string
+      - name: kind
+        in: query
+        description: classic | member
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Page"
+  /api/v1/authors/{authorId}:
+    get:
+      tags:
+      - Content
+      summary: "An author's page: who they are and their numbers"
+      description: "Their posts are at /posts?author=<id>. Ids starting with classic:\
+        \ are imported authors."
+      operationId: author
+      parameters:
+      - name: authorId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthorDetail"
+  /api/v1/admin/reports:
+    get:
+      tags:
+      - Admin
+      summary: "Open reports, newest first"
+      operationId: reports
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 60
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Page"
+      security:
+      - bearer: []
+  /api/v1/admin/members:
+    get:
+      tags:
+      - Admin
+      summary: "Members, newest first"
+      description: q matches part of the email or display name.
+      operationId: members
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 60
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Page"
+      security:
+      - bearer: []
+  /api/v1/me/posts/{postId}:
+    delete:
+      tags:
+      - Me
+      summary: Remove one of my posts
+      description: Admins may remove any post here as well.
+      operationId: removePost
+      parameters:
+      - name: postId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      security:
+      - bearer: []
+  /api/v1/admin/posts/{postId}:
+    delete:
+      tags:
+      - Admin
+      summary: "Remove any post with its hearts, comments and reports"
+      operationId: removePost_1
+      parameters:
+      - name: postId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      security:
+      - bearer: []
+components:
+  schemas:
+    Like:
+      type: object
+      properties:
+        liked:
+          type: boolean
+        likeCount:
+          type: integer
+          format: int64
+    Signup:
+      type: object
+      properties:
+        email:
+          type: string
+        displayName:
+          type: string
+        password:
+          type: string
+        over18:
+          type: boolean
+          description: The person confirmed being 18 or older
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        displayName:
+          type: string
+    NewReport:
+      type: object
+      properties:
+        postId:
+          type: string
+        reason:
+          type: string
+    NewPost:
+      type: object
+      properties:
+        kind:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        source:
+          type: string
+        mood:
+          type: string
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        source:
+          type: string
+        mood:
+          type: string
+        authorName:
+          type: string
+        authorId:
+          type: string
+        likeCount:
+          type: integer
+          format: int64
+        commentCount:
+          type: integer
+          format: int64
+        createdAt:
+          type: string
+          format: date-time
+    AccountDeletion:
+      type: object
+      properties:
+        password:
+          type: string
+          description: "The current password, as a second check"
+    NewMessage:
+      type: object
+      properties:
+        body:
+          type: string
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        fromId:
+          type: string
+        fromName:
+          type: string
+        toId:
+          type: string
+        body:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        read:
+          type: boolean
+    NewComment:
+      type: object
+      properties:
+        postId:
+          type: string
+        body:
+          type: string
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+        postId:
+          type: string
+        body:
+          type: string
+        authorName:
+          type: string
+        authorId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    Token:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: "Send as Authorization: Bearer <accessToken>"
+        tokenType:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+    ProfileUpdate:
+      type: object
+      properties:
+        displayName:
+          type: string
+        bio:
+          type: string
+    Me:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        admin:
+          type: boolean
+        bio:
+          type: string
+    MemberChange:
+      type: object
+      properties:
+        role:
+          type: string
+          description: "user | admin, null keeps it"
+        status:
+          type: string
+          description: "ACTIVE | SUSPENDED, null keeps it"
+    MemberAdmin:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        displayName:
+          type: string
+        role:
+          type: string
+        status:
+          type: string
+        since:
+          type: string
+          format: date-time
+    Page:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        total:
+          type: integer
+          format: int64
+        hasMore:
+          type: boolean
+    AccountSummary:
+      type: object
+      properties:
+        posts:
+          type: integer
+          format: int32
+        comments:
+          type: integer
+          format: int32
+        likes:
+          type: integer
+          format: int32
+        messages:
+          type: integer
+          format: int32
+    ConversationSummary:
+      type: object
+      properties:
+        otherId:
+          type: string
+        otherName:
+          type: string
+        lastBody:
+          type: string
+        lastAt:
+          type: string
+          format: date-time
+        unread:
+          type: integer
+          format: int64
+    Conversations:
+      type: object
+      properties:
+        unread:
+          type: integer
+          format: int64
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConversationSummary"
+    Conversation:
+      type: object
+      properties:
+        otherId:
+          type: string
+        otherName:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+    Author:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Null when the author has no page (posts filed under a name
+            only)
+        name:
+          type: string
+        classic:
+          type: boolean
+        poems:
+          type: integer
+          format: int64
+        quotes:
+          type: integer
+          format: int64
+        likes:
+          type: integer
+          format: int64
+        mood:
+          type: string
+          description: The mood this author writes about most
+        bio:
+          type: string
+    Daily:
+      type: object
+      properties:
+        date:
+          type: string
+        topPost:
+          $ref: "#/components/schemas/Post"
+        quote:
+          $ref: "#/components/schemas/Post"
+        authorOfTheDay:
+          $ref: "#/components/schemas/Author"
+        moodOfTheDay:
+          type: string
+        selection:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+        fresh:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+        mostLoved:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+        moods:
+          type: array
+          items:
+            $ref: "#/components/schemas/MoodCount"
+        authors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Author"
+        totals:
+          $ref: "#/components/schemas/Totals"
+    MoodCount:
+      type: object
+      properties:
+        mood:
+          type: string
+        count:
+          type: integer
+          format: int64
+    Totals:
+      type: object
+      properties:
+        posts:
+          type: integer
+          format: int64
+        poems:
+          type: integer
+          format: int64
+        quotes:
+          type: integer
+          format: int64
+        authors:
+          type: integer
+          format: int64
+    AuthorDetail:
+      type: object
+      properties:
+        author:
+          $ref: "#/components/schemas/Author"
+        since:
+          type: string
+          format: date-time
+        moods:
+          type: array
+          items:
+            $ref: "#/components/schemas/MoodCount"
+        mostLoved:
+          $ref: "#/components/schemas/Post"
+        total:
+          type: integer
+          format: int64
+  securitySchemes:
+    bearer:
+      type: http
+      description: The accessToken from POST /api/v1/auth/login
+      scheme: bearer
+      bearerFormat: JWT

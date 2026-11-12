@@ -1,0 +1,74 @@
+# Public address of the site. Used for the ingress host and as the allowed CORS origin.
+publicUrl: https://verse.example.org
+
+image:
+  registry: ""             # e.g. registry.example.org — empty means the plain names below (local cluster / kind load)
+  server: verse/server
+  frontend: verse/frontend
+  tag: "2.0.0"
+  pullPolicy: IfNotPresent
+  pullSecrets: []          # - name: regcred
+
+auth:
+  # HS256 key for sign-in tokens, 32+ characters. Empty = generated on first install and kept on upgrades.
+  jwtSecret: ""
+  # How long a sign-in lasts.
+  tokenTtl: 7d
+
+# An admin account made sure of at every start (created if missing, promoted if it exists).
+# Set an email to enable it; an empty password is generated once (see NOTES after install).
+# Once you have promoted your own account (Members page), clear the email and upgrade.
+bootstrapAdmin:
+  email: ""
+  password: ""
+  displayName: Admin
+
+seed:
+  # Import the public-domain classics (~3,600 poems and quotes) into an empty database at first start.
+  classics: true
+
+postgres:
+  # In-cluster PostgreSQL (fine for a small community). Set enabled=false and fill external.* for a managed database.
+  enabled: true
+  image: postgres:16.4
+  storage: 5Gi
+  storageClass: ""
+  database: verse
+  username: verse
+  password: ""             # empty = generated once and kept
+  external:
+    host: ""
+    port: 5432
+  resources:
+    requests: { cpu: 100m, memory: 256Mi }
+    limits: { memory: 1Gi }
+
+backup:
+  # Nightly pg_dump to a PVC, keepDays days kept. Only with the in-cluster PostgreSQL.
+  enabled: true
+  schedule: "0 3 * * *"
+  storage: 10Gi
+  keepDays: 14
+
+server:
+  # More than one replica works; replicas share the database and see each other's changes at once.
+  replicas: 1
+  javaOpts: "-XX:MaxRAMPercentage=70"
+  resources:
+    requests: { cpu: 200m, memory: 512Mi }
+    limits: { memory: 1Gi }
+  extraEnv: []             # - { name: VERSE_TOKEN_TTL, value: 12h }
+
+frontend:
+  replicas: 1
+  resources:
+    requests: { cpu: 20m, memory: 32Mi }
+    limits: { memory: 128Mi }
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+    # cert-manager.io/cluster-issuer: letsencrypt
+  tls: true
+  tlsSecretName: ""        # empty = <release>-verse-tls (cert-manager fills it when the annotation is set)

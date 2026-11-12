@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Verse">
+  <!-- C: an ink drop holding a serif V -->
+  <path d="M60 8 C60 8 22 48 22 76 A38 38 0 0 0 98 76 C98 48 60 8 60 8 Z" fill="currentColor"/>
+  <text x="60" y="92" text-anchor="middle" font-family="Iowan Old Style, Palatino Linotype, Palatino, Georgia, serif" font-size="56" font-weight="700" fill="#fff">V</text>
+</svg>

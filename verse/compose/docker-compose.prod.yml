@@ -1,0 +1,14 @@
+# Production overrides for a single host:
+#   docker compose -f compose/docker-compose.yml -f compose/docker-compose.prod.yml --env-file compose/.env.prod up -d --build
+# Put a TLS-terminating proxy (Caddy, Traefik, a cloud load balancer) in front of port 80.
+services:
+  postgres:
+    ports: !reset []
+    restart: unless-stopped
+  server:
+    ports: !reset []
+    restart: unless-stopped
+  frontend:
+    ports: !override
+      - "80:8020"
+    restart: unless-stopped

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charset="utf-8" />
+        <meta name="description" content="Verse: poems and quotes from people like you, and the classics." />
+        <title>Verse</title>
+        <style>
+            /* shown until the app has started (the server may still be booting) */
+            .boot {
+                position: fixed;
+                inset: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 14px;
+                background: #faf6ef;
+                color: #221d1a;
+                font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+                font-size: 22px;
+                opacity: 0;
+                animation: boot-in 0.2s ease 0.3s forwards;
+            }
+            .boot svg {
+                width: 56px;
+                height: 56px;
+                animation: boot-pulse 1.6s ease-in-out infinite;
+            }
+            @media (prefers-color-scheme: dark) {
+                .boot {
+                    background: #15120f;
+                    color: #f1eae0;
+                }
+            }
+            @keyframes boot-in {
+                to {
+                    opacity: 1;
+                }
+            }
+            @keyframes boot-pulse {
+                50% {
+                    transform: scale(0.92);
+                    opacity: 0.7;
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .boot svg {
+                    animation: none;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="root">
+            <div class="boot" role="status" aria-live="polite">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true">
+                    <rect width="64" height="64" rx="14" fill="#b5533c" />
+                    <g fill="#fbf7f1" transform="translate(8 7) scale(0.4)">
+                        <path d="M12 22 L32 22 L52 82 L46 100 Z" />
+                        <path d="M50 94 C52 62 68 34 108 10 C102 36 92 58 74 80 C68 88 60 94 50 94 Z" />
+                        <circle cx="44" cy="110" r="4" />
+                    </g>
+                </svg>
+                <span>Opening Verse…</span>
+            </div>
+        </div>
+        <noscript>
+            <p style="font-family: sans-serif; padding: 2em; text-align: center">
+                Verse needs JavaScript. Please enable it in your browser.
+            </p>
+        </noscript>
+    </body>
+</html>

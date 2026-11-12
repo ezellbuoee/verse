@@ -1,0 +1,16 @@
+plugins {
+    alias(gradlePluginLibs.plugins.node.gradle)
+}
+
+tasks.register('e2eInstall', NpmTask) {
+    dependsOn npmInstall
+    description 'Installs Playwright and its browser.'
+    args = ['run-script', 'e2e:install']
+}
+
+tasks.register('e2eTests', NpmTask) {
+    dependsOn e2eInstall
+    description 'Runs the end-to-end tests against a running Verse (BASE_URL, default http://localhost:8020).'
+    args = ['run-script', 'e2e:test']
+    environment.put('BASE_URL', System.getenv('BASE_URL') ?: 'http://localhost:8020')
+}

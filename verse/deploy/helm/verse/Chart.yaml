@@ -1,0 +1,7 @@
+apiVersion: v2
+name: verse
+description: Verse, a community for poems and quotes (web client, server, optional in-cluster PostgreSQL, nightly backups)
+type: application
+version: 0.2.0
+appVersion: "2.0.0"
+keywords: [poetry, verse, community]

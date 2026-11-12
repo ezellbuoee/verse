@@ -1,0 +1,34 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'verse'
+
+include 'client'
+include 'server'
+include 'e2e'
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+    versionCatalogs {
+        gradlePluginLibs {
+            version('spring-boot', '4.0.6')
+            version('test-logger', '4.0.0')
+            version('node-gradle', '7.1.0')
+
+            plugin('spring-boot', 'org.springframework.boot').versionRef('spring-boot')
+            plugin('test-logger', 'com.adarshr.test-logger').versionRef('test-logger')
+            plugin('node-gradle', 'com.github.node-gradle.node').versionRef('node-gradle')
+        }
+
+        libs {
+            library('springdoc', 'org.springdoc', 'springdoc-openapi-starter-webmvc-ui').version('3.0.1')
+            library('logstash', 'net.logstash.logback', 'logstash-logback-encoder').version('8.1')
+        }
+    }
+}

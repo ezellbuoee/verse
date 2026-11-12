@@ -1,0 +1,62 @@
+# Verse with Docker Compose: PostgreSQL, the server and the web client.
+#   docker compose -f compose/docker-compose.yml up -d --build        -> http://localhost:8020
+# Production on one host: see docker-compose.prod.yml and .env.prod.example.
+name: ${PROJECT_NAME:-verse}
+
+services:
+  postgres:
+    image: postgres:16.4
+    environment:
+      POSTGRES_DB: ${VERSE_DB_NAME:-verse}
+      POSTGRES_USER: ${VERSE_DB_USERNAME:-verse}
+      POSTGRES_PASSWORD: ${VERSE_DB_PASSWORD:?set VERSE_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
+    ports:
+      # for running the server from the IDE against this database (profile dev,local-db)
+      - "8093:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  server:
+    image: ${SERVER_IMAGE:-verse/server:latest}
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      VERSE_DB_URL: jdbc:postgresql://postgres:5432/${VERSE_DB_NAME:-verse}
+      VERSE_DB_USERNAME: ${VERSE_DB_USERNAME:-verse}
+      VERSE_DB_PASSWORD: ${VERSE_DB_PASSWORD}
+      VERSE_JWT_SECRET: ${VERSE_JWT_SECRET:?set VERSE_JWT_SECRET (32+ characters)}
+      VERSE_PUBLIC_URL: ${VERSE_PUBLIC_URL:-http://localhost:8020}
+      VERSE_ADMIN_EMAIL: ${VERSE_ADMIN_EMAIL:-}
+      VERSE_ADMIN_PASSWORD: ${VERSE_ADMIN_PASSWORD:-}
+      VERSE_SEED_CLASSICS: ${VERSE_SEED_CLASSICS:-true}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080 && printf \"GET /actuator/health/readiness HTTP/1.0\\r\\n\\r\\n\" >&3 && grep -q UP <&3'"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+    ports:
+      - "8082:8080"
+
+  frontend:
+    image: ${FRONTEND_IMAGE:-verse/frontend:latest}
+    build:
+      context: ../client
+    environment:
+      VERSE_SERVER_URL: http://server:8080
+    depends_on:
+      - server
+    ports:
+      - "8020:8020"
+
+volumes:
+  postgres_data:

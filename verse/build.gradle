@@ -1,0 +1,31 @@
+import groovy.json.JsonSlurper
+
+plugins {
+    id 'idea'
+}
+
+idea {
+    module {
+        downloadSources = true
+    }
+}
+
+allprojects {
+    apply plugin: 'base'
+
+    // The one version of Verse lives in package.json; a CI build number is appended when present.
+    String baseVersion = new JsonSlurper().parse(rootProject.file('package.json')).version.split('-')[0].trim()
+    if (rootProject.hasProperty('releaseVersion')) {
+        version = rootProject.getProperty('releaseVersion')
+    } else if (System.env.BUILD_NUMBER) {
+        version = baseVersion + "-build.${String.format('%05d', Integer.parseInt(System.env.BUILD_NUMBER))}"
+    } else {
+        version = baseVersion
+    }
+}
+
+tasks.register('getVersion') {
+    doLast {
+        println project.version
+    }
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Verse">
+  <!-- Verse mark: a V whose right stroke is a quill. Left stroke -->
+  <path d="M14 24 L30 24 L52 84 L46 100 Z" fill="currentColor"/>
+  <!-- quill vane -->
+  <path d="M52 92 C54 64 68 36 106 12 C100 36 92 56 76 78 C70 86 62 92 52 92 Z" fill="currentColor"/>
+  <!-- barbs cut into the vane -->
+  <path d="M66 70 L92 36 M62 78 L84 50 M58 86 L76 64" stroke="var(--verse-paper, #faf6ef)" stroke-width="2.2" stroke-linecap="round" opacity="0.85"/>
+  <!-- shaft and nib -->
+  <path d="M52 92 C50 96 48 100 46 104" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="44" cy="110" r="3.4" fill="currentColor"/>
+</svg>

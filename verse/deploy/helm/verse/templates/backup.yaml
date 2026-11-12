@@ -1,0 +1,57 @@
+{{- if and .Values.backup.enabled .Values.postgres.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "verse.name" . }}-backups
+  labels: {{- include "verse.labels" . | nindent 4 }}
+spec:
+  accessModes: [ ReadWriteOnce ]
+  {{- if .Values.postgres.storageClass }}
+  storageClassName: {{ .Values.postgres.storageClass }}
+  {{- end }}
+  resources: { requests: { storage: {{ .Values.backup.storage }} } }
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "verse.name" . }}-backup
+  labels: {{- include "verse.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.backup.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          # the backup volume is ReadWriteOnce and also mounted by the database pod: run on the same node
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - topologyKey: kubernetes.io/hostname
+                  labelSelector:
+                    matchLabels: {{- include "verse.selector" . | nindent 22 }}
+                      app.kubernetes.io/component: postgres
+          containers:
+            - name: pg-dump
+              image: {{ .Values.postgres.image }}
+              env:
+                - { name: PGHOST, value: {{ include "verse.name" . }}-postgres }
+                - { name: PGUSER, value: {{ .Values.postgres.username | quote }} }
+                - { name: PGPASSWORD, valueFrom: { secretKeyRef: { name: {{ include "verse.name" . }}-db, key: password } } }
+              command:
+                - sh
+                - -c
+                - |
+                  set -e
+                  stamp=$(date +%Y-%m-%d_%H%M)
+                  pg_dump -Fc {{ .Values.postgres.database | quote }} > /backups/{{ .Values.postgres.database }}_${stamp}.dump
+                  find /backups -name '*.dump' -mtime +{{ .Values.backup.keepDays }} -delete
+                  echo "backup ok: $(ls /backups | wc -l) files kept"
+              volumeMounts: [ { name: backups, mountPath: /backups } ]
+          volumes:
+            - name: backups
+              persistentVolumeClaim: { claimName: {{ include "verse.name" . }}-backups }
+{{- end }}

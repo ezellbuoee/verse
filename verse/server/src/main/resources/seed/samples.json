@@ -1,0 +1,66 @@
+[
+ {
+  "kind": "POEM",
+  "title": "Morning on the Lagos Bridge",
+  "body": "The sun climbs slow above the mainland haze,\nthe buses cough and shoulder into day.\nA girl sells oranges beside the rail,\nher laughter louder than the engines' bray.\n\nI count the boats below like small white prayers\nand think of you, still sleeping, far away.",
+  "mood": "NATURE",
+  "authorName": "Amara Okafor",
+  "authorId": "amara"
+ },
+ {
+  "kind": "QUOTE",
+  "body": "A poem is a door you leave open for a stranger.",
+  "source": "Tunde Bello",
+  "mood": "HOPE",
+  "authorName": "Tunde Bello",
+  "authorId": "tunde"
+ },
+ {
+  "kind": "POEM",
+  "title": "What Grief Taught Me",
+  "body": "Grief does not knock.\nIt lets itself in, sits in your chair,\ndrinks from your cup, learns your name,\nand one day, without warning,\nleaves the door ajar\nso the light can find you.",
+  "mood": "GRIEF",
+  "authorName": "Chiamaka Eze",
+  "authorId": "chiamaka"
+ },
+ {
+  "kind": "QUOTE",
+  "body": "We are all just verses looking for the song.",
+  "source": "Amara Okafor",
+  "mood": "JOY",
+  "authorName": "Amara Okafor",
+  "authorId": "amara"
+ },
+ {
+  "kind": "POEM",
+  "title": "Night Shift",
+  "body": "Three a.m. and the city hums in minor key,\nstreetlights bowing to an empty road.\nI write your name in condensation on the glass\nand watch the letters run before I can decide\nwhat I would have said.",
+  "mood": "NIGHT",
+  "authorName": "Tunde Bello",
+  "authorId": "tunde"
+ },
+ {
+  "kind": "POEM",
+  "title": "Small Joys",
+  "body": "Warm bread. A letter.\nRain that ends before the walk home.\nYour hand, finding mine without looking.",
+  "mood": "JOY",
+  "authorName": "Chiamaka Eze",
+  "authorId": "chiamaka"
+ },
+ {
+  "kind": "QUOTE",
+  "body": "Love is the only language that forgives its own grammar.",
+  "source": "Chiamaka Eze",
+  "mood": "LOVE",
+  "authorName": "Chiamaka Eze",
+  "authorId": "chiamaka"
+ },
+ {
+  "kind": "POEM",
+  "title": "Harmattan",
+  "body": "The dust arrives like an old relative,\nuninvited, settling in every room.\nLips crack, the sky turns to milk,\nand still the hibiscus insists on red.",
+  "mood": "NATURE",
+  "authorName": "Amara Okafor",
+  "authorId": "amara"
+ }
+]

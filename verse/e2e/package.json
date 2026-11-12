@@ -1,0 +1,28 @@
+{
+  "name": "verse-e2e",
+  "description": "End-to-end tests for Verse",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "clean": "rimraf node_modules test-results playwright-report",
+    "e2e:install": "playwright install chromium",
+    "e2e:test": "playwright test",
+    "e2e:test-ui": "playwright test --ui",
+    "e2e:report": "playwright show-report",
+    "lint": "eslint .",
+    "format": "prettier --check \"./*.ts\" \"tests/**/*.ts\"",
+    "format:fix": "prettier --write \"./*.ts\" \"tests/**/*.ts\""
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.2.1",
+    "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^24.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.59.0",
+    "@typescript-eslint/parser": "^8.59.0",
+    "eslint": "^9.13.0",
+    "prettier": "^3.8.1",
+    "rimraf": "^6.1.0",
+    "typescript": "^6.0.3"
+  }
+}

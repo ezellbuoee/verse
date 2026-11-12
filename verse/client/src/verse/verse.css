@@ -1,0 +1,3129 @@
+/* Verse — editorial look. Light and dark palettes; dark follows [data-theme="dark"] on <html>. */
+:root {
+    --verse-paper: #faf6ef;
+    --verse-card: #ffffff;
+    --verse-ink: #221d1a;
+    --verse-ink-soft: #6e655c;
+    --verse-accent: #b5533c;
+    --verse-accent-ink: #ffffff;
+    --verse-accent-soft: #f6e3dc;
+    --verse-line: #e9e1d6;
+    --verse-shadow: 0 1px 2px rgba(34, 29, 26, 0.05);
+    --verse-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    --verse-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --verse-max: 1120px;
+}
+
+[data-theme="dark"] {
+    --verse-paper: #15120f;
+    --verse-card: #1f1a16;
+    --verse-ink: #f1eae0;
+    --verse-ink-soft: #a79c90;
+    --verse-accent: #e0775c;
+    --verse-accent-ink: #15120f;
+    --verse-accent-soft: #3a241d;
+    --verse-line: #2e2721;
+    --verse-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------- page and shell ---------- */
+.verse-page {
+    min-height: 100%;
+    background: var(--verse-paper);
+    color: var(--verse-ink);
+    font-family: var(--verse-sans);
+    display: flex;
+    flex-direction: column;
+}
+
+.verse-view {
+    height: 100%;
+    overflow-y: auto;
+    background: var(--verse-paper);
+    color: var(--verse-ink);
+    font-family: var(--verse-sans);
+    position: relative;
+}
+
+.verse-main {
+    flex: 1;
+    width: 100%;
+    max-width: var(--verse-max);
+    margin: 0 auto;
+    padding: 0 16px 96px;
+    box-sizing: border-box;
+}
+
+.verse-masthead {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: var(--verse-max);
+    margin: 0 auto;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    min-height: 56px;
+}
+
+.verse-masthead-bar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--verse-paper);
+    border-bottom: 1px solid var(--verse-line);
+}
+
+.verse-wordmark {
+    font-family: var(--verse-serif);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: var(--verse-ink);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.verse-nav {
+    display: flex;
+    gap: 4px;
+    margin-left: 8px;
+}
+
+.verse-nav button {
+    font: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 999px;
+    background: none;
+    color: var(--verse-ink-soft);
+    cursor: pointer;
+}
+
+.verse-nav button:hover {
+    color: var(--verse-ink);
+}
+
+.verse-nav button[aria-current="page"] {
+    color: var(--verse-ink);
+    background: var(--verse-accent-soft);
+}
+
+.verse-masthead-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.verse-iconbtn {
+    position: relative;
+    font: inherit;
+    font-size: 18px;
+    line-height: 1;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--verse-line);
+    background: var(--verse-card);
+    color: var(--verse-ink);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.verse-iconbtn:hover {
+    border-color: var(--verse-accent);
+}
+
+.verse-bottomnav {
+    display: none;
+}
+
+@media (max-width: 760px) {
+    .verse-nav,
+    .verse-masthead .verse-primary--small.verse-write-btn {
+        display: none;
+    }
+
+    .verse-wordmark {
+        font-size: 24px;
+    }
+
+    .verse-bottomnav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 6;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        background: var(--verse-card);
+        border-top: 1px solid var(--verse-line);
+        padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+    }
+
+    .verse-bottomnav button {
+        font: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding: 6px 0;
+        border: none;
+        background: none;
+        color: var(--verse-ink-soft);
+        cursor: pointer;
+        position: relative;
+    }
+
+    .verse-bottomnav button span[aria-hidden] {
+        font-size: 20px;
+        line-height: 1;
+    }
+
+    .verse-bottomnav button[aria-current="page"] {
+        color: var(--verse-accent);
+    }
+
+    .verse-bottomnav .verse-badge {
+        position: absolute;
+        top: 2px;
+        right: 22%;
+    }
+}
+
+/* ---------- typography blocks ---------- */
+.verse-kicker {
+    font-family: var(--verse-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--verse-accent);
+    margin: 0 0 8px;
+}
+
+.verse-section {
+    margin-top: 40px;
+}
+
+.verse-section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 2px solid var(--verse-ink);
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+}
+
+.verse-section-title {
+    font-family: var(--verse-serif);
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.verse-section-more {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    font-size: 14px;
+    color: var(--verse-accent);
+    cursor: pointer;
+}
+
+/* ---------- hero (poem of the day) ---------- */
+.verse-hero {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 32px;
+    padding: 32px 0 8px;
+    align-items: start;
+}
+
+.verse-hero-poem {
+    cursor: pointer;
+}
+
+.verse-hero-title {
+    font-family: var(--verse-serif);
+    font-size: clamp(34px, 5vw, 56px);
+    line-height: 1.05;
+    font-weight: 700;
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+}
+
+.verse-hero-excerpt {
+    font-family: var(--verse-serif);
+    font-size: 20px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    margin: 0 0 14px;
+    color: var(--verse-ink);
+}
+
+.verse-hero-byline {
+    font-size: 14px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-hero-byline strong {
+    color: var(--verse-ink);
+}
+
+.verse-hero-side {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    border-left: 1px solid var(--verse-line);
+    padding-left: 32px;
+}
+
+.verse-quoteday {
+    font-family: var(--verse-serif);
+    font-size: 24px;
+    font-style: italic;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.verse-quoteday-source {
+    display: block;
+    margin-top: 8px;
+    font-family: var(--verse-sans);
+    font-style: normal;
+    font-size: 14px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-newlist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.verse-newlist li {
+    border-top: 1px solid var(--verse-line);
+}
+
+.verse-newlist button {
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    padding: 10px 0;
+    background: none;
+    border: none;
+    color: var(--verse-ink);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.verse-newlist .t {
+    font-family: var(--verse-serif);
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.verse-newlist .b {
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+}
+
+@media (max-width: 860px) {
+    .verse-hero {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding-top: 20px;
+    }
+
+    .verse-hero-side {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px solid var(--verse-line);
+        padding-top: 20px;
+    }
+}
+
+/* ---------- themes (moods) ---------- */
+.verse-themes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.verse-chip {
+    font: inherit;
+    font-size: 14px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--verse-line);
+    background: var(--verse-card);
+    color: var(--verse-ink);
+    cursor: pointer;
+}
+
+.verse-chip.is-on {
+    background: var(--verse-accent);
+    border-color: var(--verse-accent);
+    color: var(--verse-accent-ink);
+}
+
+.verse-chip small {
+    color: inherit;
+    opacity: 0.7;
+    margin-left: 4px;
+}
+
+/* ---------- grids: poems, poets ---------- */
+.verse-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+@media (max-width: 760px) {
+    .verse-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+}
+
+.verse-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.verse-card {
+    position: relative;
+    background: var(--verse-card);
+    border: 1px solid var(--verse-line);
+    border-radius: 14px;
+    padding: 20px 20px 14px;
+    box-shadow: var(--verse-shadow);
+}
+
+.verse-card--quote {
+    background: linear-gradient(135deg, var(--verse-card) 0%, var(--verse-accent-soft) 160%);
+}
+
+.verse-card--rank {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 12px;
+}
+
+.verse-rank {
+    font-family: var(--verse-serif);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--verse-accent);
+    line-height: 1;
+}
+
+.verse-poem-title {
+    font-family: var(--verse-serif);
+    font-size: 23px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 10px;
+    padding-right: 36px;
+}
+
+.verse-poem-title button,
+.verse-title-link {
+    font: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.verse-title-link:hover {
+    color: var(--verse-accent);
+}
+
+.verse-poem-body {
+    font-family: var(--verse-serif);
+    font-size: 17px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    margin: 0;
+}
+
+.verse-poem-body--clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 8;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.verse-readmore {
+    display: inline-block;
+    margin-top: 8px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--verse-accent);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.verse-quote {
+    margin: 0;
+    padding: 4px 0 2px;
+}
+
+.verse-quote-text {
+    font-family: var(--verse-serif);
+    font-size: 22px;
+    font-style: italic;
+    line-height: 1.45;
+    margin: 0;
+    padding-right: 36px;
+}
+
+.verse-quote-source {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--verse-line);
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-author {
+    font-weight: 600;
+    color: var(--verse-ink);
+}
+
+.verse-author--link {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    font-weight: 600;
+    color: var(--verse-ink);
+    cursor: pointer;
+}
+
+.verse-author--link:hover {
+    color: var(--verse-accent);
+}
+
+.verse-mood {
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--verse-accent-soft);
+    color: var(--verse-accent);
+    font-size: 12px;
+}
+
+.verse-counts {
+    margin-left: auto;
+    display: flex;
+    gap: 4px;
+}
+
+.verse-react {
+    font: inherit;
+    font-size: 14px;
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 999px;
+    color: var(--verse-ink-soft);
+    cursor: pointer;
+}
+
+.verse-react:hover,
+.verse-react.is-open {
+    background: var(--verse-accent-soft);
+    color: var(--verse-accent);
+}
+
+.verse-react.is-liked {
+    color: var(--verse-accent);
+    font-weight: 600;
+}
+
+/* poets */
+.verse-poet {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    padding: 14px;
+    border: 1px solid var(--verse-line);
+    border-radius: 14px;
+    background: var(--verse-card);
+    color: var(--verse-ink);
+    cursor: pointer;
+}
+
+.verse-poet-name {
+    font-family: var(--verse-serif);
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.verse-poet-sub {
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-avatar {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--verse-accent-soft);
+    color: var(--verse-accent);
+    font-family: var(--verse-serif);
+    font-size: 22px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---------- poem page ---------- */
+.verse-article {
+    max-width: 720px;
+    margin: 0 auto;
+    padding-top: 12px;
+}
+
+.verse-article .verse-poem-body {
+    font-size: 19px;
+    line-height: 1.7;
+}
+
+.verse-article-title {
+    font-family: var(--verse-serif);
+    font-size: clamp(30px, 4vw, 44px);
+    line-height: 1.1;
+    margin: 6px 0 16px;
+}
+
+/* ---------- comments ---------- */
+.verse-comments {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--verse-line);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.verse-comments-status,
+.verse-comment-meta {
+    margin: 0;
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-comment-meta {
+    display: flex;
+    gap: 6px;
+}
+
+.verse-comment-body {
+    margin: 2px 0 0;
+    font-size: 15px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+}
+
+.verse-comment-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.verse-comment-input {
+    flex: 1;
+    min-width: 0;
+    padding: 9px 12px;
+    font-size: 15px;
+}
+
+/* ---------- forms and buttons ---------- */
+.verse-form {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 16px 0 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.verse-form-title {
+    font-family: var(--verse-serif);
+    font-size: 34px;
+    margin: 0;
+}
+
+.verse-form-hint {
+    margin: 0;
+    color: var(--verse-ink-soft);
+    font-size: 14px;
+}
+
+.verse-form-error {
+    margin: 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--verse-accent-soft);
+    color: var(--verse-accent);
+    font-size: 14px;
+}
+
+.verse-label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.verse-label-note {
+    font-weight: 400;
+    color: var(--verse-ink-soft);
+}
+
+.verse-input {
+    font: inherit;
+    font-size: 16px;
+    padding: 12px 14px;
+    border: 1px solid var(--verse-line);
+    border-radius: 12px;
+    background: var(--verse-card);
+    color: var(--verse-ink);
+}
+
+.verse-input:focus {
+    outline: 2px solid var(--verse-accent);
+    outline-offset: 1px;
+}
+
+.verse-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 15px;
+}
+
+.verse-check input {
+    width: 20px;
+    height: 20px;
+    margin: 1px 0 0;
+    accent-color: var(--verse-accent);
+}
+
+.verse-primary {
+    font: inherit;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 13px 20px;
+    border: none;
+    border-radius: 999px;
+    background: var(--verse-accent);
+    color: var(--verse-accent-ink);
+    cursor: pointer;
+}
+
+.verse-primary:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.verse-primary--small {
+    font-size: 14px;
+    padding: 8px 16px;
+}
+
+.verse-secondary {
+    font: inherit;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 13px 18px;
+    border: 1px solid var(--verse-line);
+    border-radius: 999px;
+    background: var(--verse-card);
+    color: var(--verse-ink);
+    cursor: pointer;
+}
+
+.verse-link {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    font-weight: 600;
+    color: var(--verse-accent);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.verse-back {
+    background: none;
+    border: none;
+    color: var(--verse-accent);
+    font: inherit;
+    cursor: pointer;
+    padding: 12px 0;
+}
+
+.verse-status {
+    margin: 48px auto;
+    text-align: center;
+    color: var(--verse-ink-soft);
+}
+
+.verse-status--error {
+    color: var(--verse-accent);
+}
+
+.verse-danger {
+    background: #9b2c1f;
+    color: #fff;
+}
+
+.verse-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+/* write page: a sheet of paper */
+.verse-write {
+    max-width: 720px;
+}
+
+.verse-write .verse-textarea {
+    font-family: var(--verse-serif);
+    font-size: 19px;
+    line-height: 1.6;
+    min-height: 260px;
+    resize: vertical;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--verse-line);
+}
+
+.verse-write .verse-title-input {
+    font-family: var(--verse-serif);
+    font-size: 30px;
+    font-weight: 700;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 4px 0;
+}
+
+.verse-write .verse-input:focus {
+    outline: none;
+    border-bottom-color: var(--verse-accent);
+}
+
+.verse-segmented {
+    display: inline-flex;
+    border: 1px solid var(--verse-line);
+    border-radius: 999px;
+    padding: 3px;
+    background: var(--verse-card);
+    align-self: flex-start;
+}
+
+.verse-segmented button {
+    font: inherit;
+    font-weight: 600;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--verse-ink-soft);
+    cursor: pointer;
+}
+
+.verse-segmented button.is-on {
+    background: var(--verse-accent);
+    color: var(--verse-accent-ink);
+}
+
+.verse-moods {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.verse-mood-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.verse-mood-pick {
+    font: inherit;
+    font-size: 14px;
+    padding: 6px 14px;
+    border: 1px solid var(--verse-line);
+    border-radius: 999px;
+    background: var(--verse-card);
+    color: var(--verse-ink-soft);
+    cursor: pointer;
+}
+
+.verse-mood-pick.is-on {
+    background: var(--verse-accent-soft);
+    border-color: var(--verse-accent);
+    color: var(--verse-accent);
+}
+
+/* ---------- card menu, report, remove ---------- */
+.verse-cardmenu {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+}
+
+.verse-dots {
+    font: inherit;
+    font-size: 18px;
+    line-height: 1;
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 999px;
+    color: var(--verse-ink-soft);
+    cursor: pointer;
+}
+
+.verse-dots:hover {
+    background: var(--verse-accent-soft);
+    color: var(--verse-accent);
+}
+
+.verse-menu,
+.verse-confirm,
+.verse-note {
+    position: absolute;
+    right: 0;
+    top: 30px;
+    background: var(--verse-card);
+    border: 1px solid var(--verse-line);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+}
+
+.verse-menu {
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.verse-menu button {
+    font: inherit;
+    text-align: left;
+    padding: 10px 14px;
+    border: none;
+    background: none;
+    color: var(--verse-ink);
+    cursor: pointer;
+}
+
+.verse-menu button:hover {
+    background: var(--verse-paper);
+}
+
+.verse-menu-danger {
+    color: #c0392b;
+}
+
+.verse-menu-empty {
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-confirm {
+    width: min(320px, 80vw);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.verse-confirm p {
+    margin: 0;
+}
+
+.verse-confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.verse-note {
+    width: min(260px, 70vw);
+    margin: 0;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+/* ---------- chats ---------- */
+.verse-badge {
+    display: inline-block;
+    min-width: 18px;
+    padding: 1px 5px;
+    border-radius: 999px;
+    background: var(--verse-accent);
+    color: var(--verse-accent-ink);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 16px;
+}
+
+.verse-iconbtn .verse-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+}
+
+.verse-chats {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.verse-chat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    padding: 12px;
+    border: 1px solid var(--verse-line);
+    border-radius: 14px;
+    background: var(--verse-card);
+    color: var(--verse-ink);
+    cursor: pointer;
+}
+
+.verse-chat-row-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.verse-chat-row-name {
+    font-weight: 600;
+}
+
+.verse-chat-row-last {
+    color: var(--verse-ink-soft);
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.verse-chat-row-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-chat {
+    max-width: 720px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.verse-chat-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--verse-line);
+}
+
+.verse-chat-title {
+    font-family: var(--verse-serif);
+    font-size: 22px;
+    margin: 0;
+}
+
+.verse-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.verse-bubble {
+    max-width: 78%;
+    align-self: flex-start;
+    background: var(--verse-card);
+    border: 1px solid var(--verse-line);
+    border-radius: 16px 16px 16px 4px;
+    padding: 8px 12px;
+}
+
+.verse-bubble--mine {
+    align-self: flex-end;
+    background: var(--verse-accent);
+    border-color: var(--verse-accent);
+    color: var(--verse-accent-ink);
+    border-radius: 16px 16px 4px 16px;
+}
+
+.verse-bubble-text {
+    margin: 0;
+    white-space: pre-wrap;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.verse-bubble-time {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.verse-chat-form {
+    display: flex;
+    gap: 8px;
+    padding: 10px 0 16px;
+    border-top: 1px solid var(--verse-line);
+    background: var(--verse-paper);
+}
+
+/* ---------- profile ---------- */
+.verse-profile-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 0 18px;
+}
+
+.verse-profile-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.verse-profile-name {
+    font-family: var(--verse-serif);
+    font-size: 32px;
+    margin: 0;
+}
+
+/* ---------- reports (admin) ---------- */
+.verse-report-head {
+    margin: 0 0 8px;
+    font-size: 14px;
+}
+
+.verse-report-post {
+    margin: 0 0 10px;
+    padding: 10px 12px;
+    border-left: 3px solid var(--verse-accent-soft);
+    background: var(--verse-paper);
+    border-radius: 0 10px 10px 0;
+}
+
+/* ---------- footer ---------- */
+.verse-footer {
+    border-top: 1px solid var(--verse-line);
+    margin-top: 48px;
+    padding: 20px 0 8px;
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+}
+
+.verse-footer button {
+    font: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--verse-ink-soft);
+    cursor: pointer;
+}
+
+/* ---------- member mode: masthead, the place, bottom bar ---------- */
+.verse-member {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--verse-paper);
+    color: var(--verse-ink);
+    font-family: var(--verse-sans);
+}
+
+.verse-member .verse-masthead-bar {
+    position: static;
+}
+
+.verse-member .verse-frame {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+}
+
+@media (max-width: 760px) {
+    .verse-member .verse-frame {
+        padding-bottom: 58px;
+    }
+}
+
+/* ---------- polish: focus, motion, targets ---------- */
+.verse-page *:focus-visible,
+.verse-view *:focus-visible,
+.verse-member *:focus-visible {
+    outline: 2px solid var(--verse-accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+.verse-primary,
+.verse-secondary,
+.verse-iconbtn,
+.verse-chip,
+.verse-react,
+.verse-poet,
+.verse-chat-row,
+.verse-card,
+.verse-nav button,
+.verse-readmore,
+.verse-title-link {
+    transition:
+        background-color 150ms ease,
+        color 150ms ease,
+        border-color 150ms ease,
+        transform 150ms ease,
+        box-shadow 150ms ease;
+}
+
+.verse-primary:not(:disabled):hover {
+    filter: brightness(0.94);
+}
+
+.verse-primary:not(:disabled):active,
+.verse-secondary:active,
+.verse-chip:active {
+    transform: translateY(1px);
+}
+
+.verse-secondary:hover {
+    border-color: var(--verse-accent);
+    color: var(--verse-accent);
+}
+
+.verse-card:hover {
+    box-shadow: 0 6px 18px rgba(34, 29, 26, 0.08);
+}
+
+[data-theme="dark"] .verse-card:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+.verse-poet:hover,
+.verse-chat-row:hover {
+    border-color: var(--verse-accent);
+    transform: translateY(-1px);
+}
+
+.verse-poet:disabled {
+    cursor: default;
+    opacity: 0.75;
+}
+
+.verse-react,
+.verse-dots,
+.verse-link,
+.verse-readmore {
+    min-height: 36px;
+}
+
+@media (max-width: 760px) {
+    .verse-bottomnav button {
+        min-height: 52px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .verse-page *,
+    .verse-view *,
+    .verse-member * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* custom checkbox */
+.verse-check {
+    cursor: pointer;
+    user-select: none;
+}
+
+.verse-check-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.verse-check-box {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--verse-ink-soft);
+    border-radius: 6px;
+    background: var(--verse-card);
+    color: var(--verse-accent-ink);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        background-color 120ms ease,
+        border-color 120ms ease;
+}
+
+.verse-check-input:checked + .verse-check-box {
+    background: var(--verse-accent);
+    border-color: var(--verse-accent);
+}
+
+.verse-check-input:focus-visible + .verse-check-box {
+    outline: 2px solid var(--verse-accent);
+    outline-offset: 2px;
+}
+
+.verse-check-text {
+    line-height: 1.4;
+    padding-top: 1px;
+}
+
+/* inputs: error state, password toggle */
+.verse-input.is-error {
+    border-color: var(--verse-accent);
+}
+
+.verse-password {
+    position: relative;
+    display: flex;
+}
+
+.verse-password .verse-input {
+    flex: 1;
+    padding-right: 64px;
+}
+
+.verse-password-toggle {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 999px;
+    background: var(--verse-accent-soft);
+    color: var(--verse-accent);
+    cursor: pointer;
+}
+
+/* sheets (join, sign in) */
+.verse-sheet {
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+/* masthead name next to the initial on wide screens */
+.verse-masthead-name {
+    font-weight: 600;
+    font-size: 14px;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+    .verse-masthead-name {
+        display: none;
+    }
+}
+
+/* toast */
+.verse-toast {
+    position: sticky;
+    top: 12px;
+    z-index: 4;
+    width: fit-content;
+    margin: 12px auto 0;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: var(--verse-ink);
+    color: var(--verse-paper);
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    animation: verse-toast-in 200ms ease;
+}
+
+@keyframes verse-toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* skeleton loading */
+.verse-skeleton {
+    padding: 40px 0;
+    max-width: 640px;
+}
+
+.sk {
+    height: 14px;
+    border-radius: 6px;
+    background: var(--verse-line);
+    margin-bottom: 12px;
+    animation: verse-pulse 1.2s ease-in-out infinite;
+}
+
+.sk-kicker {
+    width: 110px;
+    height: 10px;
+}
+
+.sk-title {
+    width: 60%;
+    height: 40px;
+}
+
+.sk-line {
+    width: 100%;
+}
+
+.sk-line.short {
+    width: 45%;
+}
+
+@keyframes verse-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.45;
+    }
+}
+
+/* chat composer clears the phone bottom bar */
+@media (max-width: 760px) {
+    .verse-chat-form {
+        padding-bottom: 12px;
+    }
+}
+
+/* the member views are see-through, so the ambient leaves show behind the content */
+.verse-member .verse-view {
+    background: transparent;
+}
+
+/* the page ground follows the mode, so short pages do not show a white strip under the content */
+html,
+body,
+#root {
+    background: var(--verse-paper);
+}
+
+.verse-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* ---------- logo ---------- */
+.verse-wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--verse-ink);
+}
+
+.verse-wordmark-mark {
+    color: var(--verse-accent);
+}
+
+.verse-bottomnav-mark {
+    height: 22px;
+    margin-bottom: 1px;
+}
+
+.verse-sheet-mark {
+    color: var(--verse-accent);
+    margin-bottom: 4px;
+}
+
+.verse-wordmark > span {
+    text-align: left;
+    line-height: 1;
+}
+
+/* ---------- ambient drift (feather-leaves in the margins) ---------- */
+.verse-ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* the content column sits above the leaves */
+.verse-masthead-bar,
+.verse-main,
+.verse-bottomnav,
+.verse-member .verse-frame {
+    position: relative;
+    z-index: 1;
+}
+
+.verse-masthead-bar {
+    z-index: 5;
+}
+
+.verse-member .verse-frame {
+    z-index: 1;
+}
+
+.verse-leaf {
+    position: absolute;
+    top: -12%;
+    width: max-content;
+    color: var(--verse-accent);
+    opacity: 0;
+    will-change: transform, opacity;
+    animation: verse-drift var(--dur) linear var(--delay) infinite;
+    filter: drop-shadow(0 6px 10px rgba(34, 29, 26, 0.08));
+}
+
+/* leaves live in the margins beside the content column: the margin is (100vw - 1120px) / 2 */
+.verse-leaf--left {
+    left: calc(max(0px, (100vw - var(--verse-max)) / 2) * var(--pos, 0.5));
+}
+
+.verse-leaf--right {
+    right: calc(max(0px, (100vw - var(--verse-max)) / 2) * var(--pos, 0.5));
+}
+
+@keyframes verse-drift {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+        opacity: 0;
+    }
+    8% {
+        opacity: calc(0.42 * var(--tone));
+    }
+    25% {
+        transform: translate3d(var(--sway), 28vh, 0) rotate(calc(var(--spin) * 0.5));
+    }
+    50% {
+        transform: translate3d(calc(var(--sway) * -0.6), 56vh, 0) rotate(var(--spin));
+    }
+    75% {
+        transform: translate3d(var(--sway), 84vh, 0) rotate(calc(var(--spin) * 1.4));
+        opacity: calc(0.42 * var(--tone));
+    }
+    100% {
+        transform: translate3d(0, 118vh, 0) rotate(calc(var(--spin) * 2));
+        opacity: 0;
+    }
+}
+
+[data-theme="dark"] .verse-leaf {
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+}
+
+/* narrow screens: the margins are gone, keep two faint leaves at the edges only */
+@media (max-width: 1240px) {
+    .verse-leaf {
+        opacity: 0;
+    }
+
+    .verse-leaf--left:nth-child(1),
+    .verse-leaf--right:nth-child(4) {
+        animation-name: verse-drift-edge;
+    }
+
+    .verse-leaf--left:nth-child(1) {
+        left: 2vw;
+    }
+
+    .verse-leaf--right:nth-child(4) {
+        right: 2vw;
+    }
+}
+
+@keyframes verse-drift-edge {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: calc(0.22 * var(--tone));
+    }
+    50% {
+        transform: translate3d(calc(var(--sway) * 0.5), 56vh, 0) rotate(var(--spin));
+    }
+    85% {
+        opacity: calc(0.22 * var(--tone));
+    }
+    100% {
+        transform: translate3d(0, 118vh, 0) rotate(calc(var(--spin) * 2));
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .verse-ambient {
+        display: none;
+    }
+}
+
+.verse-leaf:nth-child(even) {
+    color: color-mix(in srgb, var(--verse-accent) 55%, var(--verse-ink-soft));
+}
+
+/* mouse lean: deeper leaves move more; the drift animation stays on the outer span */
+.verse-ambient {
+    --mx: 0;
+    --my: 0;
+}
+
+.verse-leaf-lean {
+    display: block;
+    transform: translate3d(calc(var(--mx) * var(--depth) * -28px), calc(var(--my) * var(--depth) * -18px), 0)
+        rotate(calc(var(--mx) * var(--depth) * -8deg));
+    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* while the member app loads its model graph after sign-in */
+.verse-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: var(--verse-paper);
+    color: var(--verse-ink-soft);
+    font-size: 15px;
+}
+
+.verse-loading .verse-logo-pulse {
+    color: var(--verse-accent);
+    animation: verse-pulse 1.4s ease-in-out infinite;
+}
+
+/* ---------- poet page ---------- */
+.verse-poet-page {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.verse-poet-hero {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 20px;
+    align-items: start;
+    padding: 8px 0 24px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--verse-ink);
+}
+
+.verse-avatar--xl {
+    width: 84px;
+    height: 84px;
+    font-size: 40px;
+}
+
+.verse-poet-hero-name {
+    font-family: var(--verse-serif);
+    font-size: clamp(30px, 4vw, 42px);
+    line-height: 1.05;
+    margin: 0 0 10px;
+}
+
+.verse-poet-bio {
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0 0 12px;
+    white-space: pre-wrap;
+    max-width: 60ch;
+}
+
+.verse-stats {
+    display: flex;
+    gap: 22px;
+    margin: 0;
+}
+
+.verse-stats div {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.verse-stats dt {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--verse-ink-soft);
+}
+
+.verse-stats dd {
+    margin: 0;
+    font-family: var(--verse-serif);
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.verse-poet-hero-actions {
+    align-self: center;
+}
+
+@media (max-width: 760px) {
+    .verse-poet-hero {
+        grid-template-columns: auto 1fr;
+    }
+
+    .verse-poet-hero-actions {
+        grid-column: 1 / -1;
+    }
+
+    .verse-avatar--xl {
+        width: 64px;
+        height: 64px;
+        font-size: 30px;
+    }
+}
+
+.verse-poet-page .verse-segmented {
+    margin-bottom: 18px;
+}
+
+/* ---------- poem page byline ---------- */
+.verse-byline {
+    margin: 0 0 14px;
+}
+
+.verse-byline-author {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: var(--verse-ink);
+    cursor: pointer;
+    text-align: left;
+}
+
+.verse-byline-author:disabled {
+    cursor: default;
+}
+
+.verse-byline-name {
+    display: block;
+    font-weight: 600;
+}
+
+.verse-byline-time {
+    display: block;
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-article .verse-card {
+    padding: 24px;
+}
+
+/* ---------- account: profile form ---------- */
+.verse-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+    border: 1px solid var(--verse-line);
+    border-radius: 14px;
+    background: var(--verse-card);
+}
+
+.verse-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.verse-field-label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.verse-textarea--short {
+    min-height: 88px;
+    resize: vertical;
+}
+
+/* ---------- admin: members ---------- */
+.verse-member-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+}
+
+.verse-member-row .verse-chat-row-name {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.verse-member-row .verse-chat-row-last {
+    overflow-wrap: anywhere;
+}
+
+.verse-member-row .verse-confirm-actions {
+    margin: 0;
+}
+
+/* buttons inside stacked forms keep their natural width */
+.verse-form > .verse-secondary,
+.verse-form > .verse-primary {
+    align-self: flex-start;
+}
+
+.verse-form > .verse-primary[type="submit"] {
+    align-self: stretch;
+}
+
+.verse-source {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+    text-align: right;
+}
+
+/* ---------- search, paging ---------- */
+.verse-search-input {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 18px;
+}
+
+.verse-search-input--big {
+    font-family: var(--verse-serif);
+    font-size: 24px;
+    padding: 14px 18px;
+}
+
+.verse-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+/* the bottom bar now has five or six places on phones: keep labels readable */
+@media (max-width: 760px) {
+    .verse-bottomnav button {
+        font-size: 10.5px;
+    }
+}
+
+/* ---------- poem page: reading layout (makeover 2026-10-29) ---------- */
+.verse-reading {
+    position: relative;
+    background: var(--verse-card);
+    border: 1px solid var(--verse-line);
+    border-radius: 18px;
+    box-shadow: var(--verse-shadow);
+    padding: clamp(24px, 5vw, 52px) clamp(20px, 6vw, 64px) 22px;
+    overflow: hidden;
+}
+
+/* a soft wash in the top corner, tinted by mood */
+.verse-reading::before {
+    content: "";
+    position: absolute;
+    inset: -40% -30% auto auto;
+    width: 70%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--verse-wash, var(--verse-accent-soft)) 0%, transparent 70%);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.verse-reading[data-mood="love"] {
+    --verse-wash: #f3d4d0;
+}
+.verse-reading[data-mood="grief"] {
+    --verse-wash: #d9d6e4;
+}
+.verse-reading[data-mood="joy"] {
+    --verse-wash: #f7e5b8;
+}
+.verse-reading[data-mood="nature"] {
+    --verse-wash: #d6e5d0;
+}
+.verse-reading[data-mood="hope"] {
+    --verse-wash: #fbe1c4;
+}
+.verse-reading[data-mood="night"] {
+    --verse-wash: #cfd6e6;
+}
+
+[data-theme="dark"] .verse-reading[data-mood="love"] {
+    --verse-wash: #4a2a2b;
+}
+[data-theme="dark"] .verse-reading[data-mood="grief"] {
+    --verse-wash: #33304a;
+}
+[data-theme="dark"] .verse-reading[data-mood="joy"] {
+    --verse-wash: #4a3c1e;
+}
+[data-theme="dark"] .verse-reading[data-mood="nature"] {
+    --verse-wash: #27392a;
+}
+[data-theme="dark"] .verse-reading[data-mood="hope"] {
+    --verse-wash: #4b321d;
+}
+[data-theme="dark"] .verse-reading[data-mood="night"] {
+    --verse-wash: #232c44;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .verse-reading[data-mood="love"] {
+        --verse-wash: #4a2a2b;
+    }
+    :root:not([data-theme="light"]) .verse-reading[data-mood="grief"] {
+        --verse-wash: #33304a;
+    }
+    :root:not([data-theme="light"]) .verse-reading[data-mood="joy"] {
+        --verse-wash: #4a3c1e;
+    }
+    :root:not([data-theme="light"]) .verse-reading[data-mood="nature"] {
+        --verse-wash: #27392a;
+    }
+    :root:not([data-theme="light"]) .verse-reading[data-mood="hope"] {
+        --verse-wash: #4b321d;
+    }
+    :root:not([data-theme="light"]) .verse-reading[data-mood="night"] {
+        --verse-wash: #232c44;
+    }
+}
+
+.verse-reading > :not(.verse-cardmenu) {
+    position: relative;
+}
+
+.verse-reading .verse-cardmenu {
+    top: 14px;
+    right: 14px;
+}
+
+.verse-reading-head {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.verse-reading-head .verse-kicker {
+    margin: 0;
+}
+
+.verse-kicker-mood,
+.verse-kicker-soft {
+    color: var(--verse-ink-soft);
+    font-weight: 500;
+}
+
+.verse-reading-title {
+    font-family: var(--verse-serif);
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 4px 0 10px;
+    text-wrap: balance;
+}
+
+.verse-reading-head .verse-byline-author {
+    text-align: left;
+}
+
+.verse-ornament {
+    text-align: center;
+    color: var(--verse-accent);
+    font-size: 24px;
+    line-height: 1;
+    margin: 22px 0 26px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    justify-content: center;
+}
+
+.verse-ornament::before,
+.verse-ornament::after {
+    content: "";
+    height: 1px;
+    width: min(90px, 18%);
+    background: var(--verse-line);
+}
+
+.verse-reading-body {
+    max-width: 36rem;
+    margin: 0 auto;
+}
+
+.verse-stanza {
+    font-family: var(--verse-serif);
+    font-size: clamp(18px, 2.2vw, 21px);
+    line-height: 1.75;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    margin: 0 0 1.4em;
+}
+
+.verse-stanza:last-of-type {
+    margin-bottom: 0;
+}
+
+.verse-stanza:first-of-type::first-letter {
+    font-size: 2.6em;
+    line-height: 0.85;
+    float: left;
+    margin: 0.08em 0.1em 0 0;
+    color: var(--verse-accent);
+    font-weight: 700;
+}
+
+.verse-reading-source {
+    margin: 26px 0 0;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--verse-ink-soft);
+    text-align: center;
+}
+
+.verse-reading-quote {
+    margin: 0 auto;
+    max-width: 36rem;
+    text-align: center;
+    position: relative;
+    padding-top: 10px;
+}
+
+.verse-reading-quote::before {
+    content: "“";
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--verse-serif);
+    font-size: 120px;
+    line-height: 1;
+    color: var(--verse-accent-soft);
+    pointer-events: none;
+}
+
+.verse-reading-quote p {
+    position: relative;
+    font-family: var(--verse-serif);
+    font-style: italic;
+    font-size: clamp(24px, 3.4vw, 34px);
+    line-height: 1.4;
+    margin: 0;
+    white-space: pre-wrap;
+    text-wrap: balance;
+}
+
+.verse-reading-quote footer {
+    margin-top: 18px;
+    font-size: 14px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-reading-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 32px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--verse-line);
+}
+
+.verse-heart {
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    min-height: 40px;
+    border-radius: 999px;
+    border: 1px solid var(--verse-accent);
+    background: var(--verse-accent);
+    color: var(--verse-accent-ink);
+    cursor: pointer;
+    transition:
+        transform 150ms ease,
+        background-color 150ms ease,
+        color 150ms ease;
+}
+
+.verse-heart:hover {
+    transform: translateY(-1px);
+}
+
+.verse-heart.is-liked {
+    background: var(--verse-accent-soft);
+    color: var(--verse-accent);
+}
+
+.verse-heart-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.verse-heart.is-liked .verse-heart-icon {
+    animation: verse-heartbeat 450ms ease;
+}
+
+@keyframes verse-heartbeat {
+    0% {
+        transform: scale(1);
+    }
+    35% {
+        transform: scale(1.5);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.verse-heart--ghost {
+    background: transparent;
+    border-color: var(--verse-line);
+    color: var(--verse-ink);
+    font-weight: 500;
+}
+
+.verse-heart--ghost:hover,
+.verse-heart--ghost.is-open {
+    background: var(--verse-accent-soft);
+    border-color: var(--verse-accent-soft);
+    color: var(--verse-accent);
+}
+
+.verse-reading-comments {
+    max-width: 36rem;
+    margin: 8px auto 0;
+}
+
+.verse-reading-comments .verse-comments {
+    border-top: none;
+}
+
+.verse-more-by {
+    margin-top: 36px;
+}
+
+.verse-morelist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.verse-morelist button {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    text-align: left;
+    font: inherit;
+    color: var(--verse-ink);
+    background: var(--verse-card);
+    border: 1px solid var(--verse-line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition:
+        border-color 150ms ease,
+        transform 150ms ease;
+}
+
+.verse-morelist button:hover {
+    border-color: var(--verse-accent);
+    transform: translateX(2px);
+}
+
+.verse-morelist-kind {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--verse-accent-soft);
+    color: var(--verse-accent);
+    font-family: var(--verse-serif);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.verse-morelist-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.verse-morelist .t {
+    font-family: var(--verse-serif);
+    font-size: 18px;
+    line-height: 1.25;
+}
+
+.verse-morelist .b {
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+    .verse-reading {
+        border-radius: 14px;
+    }
+
+    .verse-reading-actions .verse-heart {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+}
+
+/* ---------- poet page: hero makeover (2026-10-29) ---------- */
+.verse-poet-hero {
+    display: block;
+    padding: 0;
+    margin-bottom: 22px;
+    border: 1px solid var(--verse-line);
+    border-bottom: none;
+    border-radius: 18px;
+    background: var(--verse-card);
+    box-shadow: var(--verse-shadow);
+    overflow: hidden;
+}
+
+.verse-poet-hero-band {
+    height: 92px;
+    background:
+        radial-gradient(120% 140% at 85% 0%, var(--verse-accent-soft) 0%, transparent 60%),
+        linear-gradient(135deg, var(--verse-accent-soft) 0%, var(--verse-card) 70%);
+    border-bottom: 1px solid var(--verse-line);
+    position: relative;
+}
+
+.verse-poet-hero--classic .verse-poet-hero-band {
+    background:
+        repeating-linear-gradient(135deg, transparent 0 14px, var(--verse-line) 14px 15px),
+        linear-gradient(135deg, var(--verse-accent-soft) 0%, var(--verse-card) 80%);
+}
+
+.verse-poet-hero-glyph {
+    position: absolute;
+    right: 22px;
+    bottom: 10px;
+    font-size: 54px;
+    line-height: 1;
+    color: var(--verse-accent);
+    opacity: 0.25;
+}
+
+.verse-poet-hero-main {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 18px;
+    align-items: start;
+    padding: 0 24px 18px;
+}
+
+.verse-poet-hero-main .verse-avatar--xl {
+    width: 96px;
+    height: 96px;
+    font-size: 44px;
+    margin-top: -48px;
+    border: 4px solid var(--verse-card);
+    box-shadow: var(--verse-shadow);
+    background: var(--verse-accent);
+    color: var(--verse-accent-ink);
+}
+
+.verse-poet-hero-text {
+    padding-top: 14px;
+    min-width: 0;
+}
+
+.verse-poet-hero-actions {
+    align-self: start;
+    padding-top: 14px;
+}
+
+.verse-stats--row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 0;
+    border-top: 1px solid var(--verse-line);
+    border-bottom: 1px solid var(--verse-line);
+    border-radius: 0 0 18px 18px;
+    background: var(--verse-paper);
+}
+
+.verse-stats--row > div {
+    padding: 12px 22px;
+    border-right: 1px solid var(--verse-line);
+}
+
+.verse-stats--row > div:last-child {
+    border-right: none;
+}
+
+.verse-stats--row .verse-stats-moods {
+    flex: 1 1 260px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 6px;
+}
+
+.verse-themes--tight {
+    gap: 6px;
+}
+
+.verse-chip--small {
+    font-size: 12.5px;
+    padding: 4px 10px;
+}
+
+.verse-chip small {
+    margin-left: 5px;
+    opacity: 0.7;
+    font-size: 0.85em;
+}
+
+.verse-mostloved {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    font: inherit;
+    color: var(--verse-ink);
+    background: linear-gradient(90deg, var(--verse-accent-soft) 0%, var(--verse-card) 60%);
+    border: 1px solid var(--verse-line);
+    border-radius: 14px;
+    padding: 12px 18px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: border-color 150ms ease;
+}
+
+.verse-mostloved:hover {
+    border-color: var(--verse-accent);
+}
+
+.verse-mostloved-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--verse-accent);
+    white-space: nowrap;
+}
+
+.verse-mostloved-title {
+    font-family: var(--verse-serif);
+    font-size: 19px;
+    line-height: 1.3;
+    min-width: 0;
+}
+
+.verse-mostloved-meta {
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+    white-space: nowrap;
+}
+
+.verse-poet-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.verse-poet-page .verse-poet-toolbar .verse-segmented {
+    margin-bottom: 0;
+}
+
+@media (max-width: 760px) {
+    .verse-poet-hero-main {
+        grid-template-columns: auto 1fr;
+        padding: 0 16px 14px;
+    }
+
+    .verse-poet-hero-main .verse-avatar--xl {
+        width: 72px;
+        height: 72px;
+        font-size: 34px;
+        margin-top: -36px;
+    }
+
+    .verse-poet-hero-actions {
+        grid-column: 1 / -1;
+        padding-top: 0;
+    }
+
+    .verse-poet-hero-band {
+        height: 72px;
+    }
+
+    .verse-stats--row > div {
+        padding: 10px 14px;
+    }
+
+    .verse-mostloved {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+}
+
+/* masthead buttons never wrap on narrow screens */
+.verse-masthead-right .verse-primary--small {
+    white-space: nowrap;
+}
+
+/* ---------- poets page makeover (2026-10-29) ---------- */
+.verse-poets-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+.verse-poets-head {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.verse-poets-title {
+    font-family: var(--verse-serif);
+    font-size: clamp(34px, 5vw, 50px);
+    line-height: 1.05;
+    margin: 0 0 8px;
+}
+
+.verse-poets-sub {
+    margin: 0 auto;
+    max-width: 48ch;
+    color: var(--verse-ink-soft);
+    font-size: 15px;
+}
+
+.verse-poets-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.verse-searchbar {
+    flex: 1 1 280px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px 0 14px;
+    min-height: 48px;
+    border: 1px solid var(--verse-line);
+    border-radius: 999px;
+    background: var(--verse-card);
+    box-shadow: var(--verse-shadow);
+    transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
+}
+
+.verse-searchbar:focus-within {
+    border-color: var(--verse-accent);
+    box-shadow: 0 0 0 3px var(--verse-accent-soft);
+}
+
+.verse-searchbar-icon {
+    font-size: 20px;
+    line-height: 1;
+    color: var(--verse-ink-soft);
+}
+
+.verse-searchbar input,
+.verse-searchbar input:focus,
+.verse-searchbar input:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+
+.verse-searchbar input {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    font-size: 17px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--verse-ink);
+    padding: 10px 0;
+}
+
+.verse-searchbar input::-webkit-search-cancel-button {
+    display: none;
+}
+
+.verse-searchbar-clear {
+    font: inherit;
+    font-size: 20px;
+    line-height: 1;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: var(--verse-accent-soft);
+    color: var(--verse-accent);
+    cursor: pointer;
+}
+
+.verse-poets-toolbar .verse-segmented small {
+    margin-left: 6px;
+    font-weight: 500;
+    opacity: 0.75;
+}
+
+.verse-poets-count {
+    margin: 0 0 16px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--verse-ink-soft);
+}
+
+.verse-poets-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.verse-poetcard {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+    align-items: start;
+    text-align: left;
+    font: inherit;
+    color: var(--verse-ink);
+    background: var(--verse-card);
+    border: 1px solid var(--verse-line);
+    border-radius: 16px;
+    padding: 16px;
+    cursor: pointer;
+    box-shadow: var(--verse-shadow);
+    transition:
+        transform 150ms ease,
+        border-color 150ms ease,
+        box-shadow 150ms ease;
+}
+
+.verse-poetcard:hover {
+    border-color: var(--verse-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(34, 29, 26, 0.08);
+}
+
+/* a poet without a page (seed posts by a name only): plain card, no hover lift */
+.verse-poetcard:disabled {
+    cursor: default;
+}
+
+.verse-poetcard:disabled:hover {
+    transform: none;
+    border-color: var(--verse-line);
+    box-shadow: var(--verse-shadow);
+}
+
+.verse-poetcard--classic {
+    background: linear-gradient(135deg, var(--verse-card) 60%, var(--verse-accent-soft) 160%);
+}
+
+.verse-avatar--lg {
+    width: 56px;
+    height: 56px;
+    font-size: 26px;
+}
+
+.verse-poetcard--classic .verse-avatar--lg {
+    background: var(--verse-accent);
+    color: var(--verse-accent-ink);
+}
+
+.verse-poetcard-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.verse-poetcard-name {
+    font-family: var(--verse-serif);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.verse-poetcard-name mark {
+    background: var(--verse-accent-soft);
+    color: var(--verse-accent);
+    border-radius: 3px;
+    padding: 0 2px;
+}
+
+.verse-poetcard-meta {
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-poetcard-bio {
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--verse-ink);
+    opacity: 0.85;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.verse-poetcard-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.verse-poetcard-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--verse-accent);
+    border: 1px solid var(--verse-accent);
+    border-radius: 999px;
+    padding: 2px 8px;
+}
+
+.verse-poets-empty {
+    text-align: center;
+    padding: 40px 16px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-poets-empty > span {
+    display: block;
+    font-size: 36px;
+    color: var(--verse-accent);
+    margin-bottom: 8px;
+}
+
+.verse-poets-empty p {
+    margin: 0 0 6px;
+}
+
+.verse-poets-empty p:first-of-type {
+    font-family: var(--verse-serif);
+    font-size: 20px;
+    color: var(--verse-ink);
+}
+
+@media (max-width: 760px) {
+    .verse-poets-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .verse-poets-toolbar .verse-segmented {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .verse-poets-toolbar .verse-segmented button {
+        flex: 1;
+        padding: 8px 10px;
+    }
+
+    .verse-poetcard {
+        padding: 14px;
+        gap: 12px;
+    }
+}
+
+/* ---------- share sheet (2026-11-02) ---------- */
+.verse-quote-link {
+    font: inherit;
+    font-style: italic;
+    white-space: pre-wrap;
+}
+
+.verse-quote-link:hover {
+    color: var(--verse-accent);
+}
+
+.verse-share-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    font-family: var(--verse-sans);
+    font-size: 16px;
+    line-height: 1.45;
+    background: rgba(20, 16, 12, 0.55);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.verse-share-backdrop .verse-share {
+    width: 100%;
+    max-width: 960px;
+    max-height: calc(100vh - 32px);
+    overflow: auto;
+    background: var(--verse-paper);
+    color: var(--verse-ink);
+    border: 1px solid var(--verse-line);
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    animation: verse-share-in 220ms ease;
+}
+
+@keyframes verse-share-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.verse-share-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px 0;
+}
+
+.verse-share-head .verse-kicker {
+    margin-bottom: 4px;
+}
+
+.verse-share-title {
+    font-family: var(--verse-serif);
+    font-size: 24px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.verse-share-by {
+    font-weight: 400;
+    color: var(--verse-ink-soft);
+}
+
+.verse-share-close {
+    font: inherit;
+    font-size: 26px;
+    line-height: 1;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--verse-line);
+    background: var(--verse-card);
+    color: var(--verse-ink);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.verse-share-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+    gap: 24px;
+    padding: 18px 24px 24px;
+}
+
+.verse-share-preview {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--verse-card);
+    border: 1px solid var(--verse-line);
+    border-radius: 14px;
+    padding: 16px;
+    min-height: 320px;
+}
+
+.verse-share-preview img {
+    max-width: 100%;
+    max-height: min(70vh, 640px);
+    border-radius: 6px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.verse-share-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.verse-share-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.verse-share-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--verse-ink-soft);
+}
+
+.verse-share-group .verse-segmented {
+    align-self: stretch;
+}
+
+.verse-share-group .verse-segmented button {
+    flex: 1;
+    padding: 8px 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.verse-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.verse-swatch--paper {
+    background: #faf6ef;
+}
+
+.verse-swatch--night {
+    background: #15120f;
+}
+
+.verse-swatch--terracotta {
+    background: #b5533c;
+}
+
+.verse-share-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.verse-share-actions .verse-primary {
+    grid-column: 1 / -1;
+}
+
+.verse-share-hint {
+    margin: 0;
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+    line-height: 1.4;
+}
+
+.verse-share-note {
+    margin: 0;
+    min-height: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--verse-accent);
+}
+
+@media (max-width: 760px) {
+    .verse-share-backdrop {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .verse-share {
+        max-height: 100vh;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .verse-share-body {
+        grid-template-columns: 1fr;
+        padding: 14px 16px 24px;
+    }
+
+    .verse-share-preview {
+        min-height: 0;
+    }
+
+    .verse-share-preview img {
+        max-height: 44vh;
+    }
+}
+
+/* ---------- front page: the day's selection (2026-11-02) ---------- */
+.verse-today {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    margin: 18px 0 10px;
+}
+
+.verse-today-date {
+    font-family: var(--verse-serif);
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.verse-today-sub {
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-section-sub {
+    font-size: 0.6em;
+    font-weight: 400;
+    color: var(--verse-ink-soft);
+}
+
+.verse-section-sub em {
+    color: var(--verse-accent);
+    font-style: italic;
+}
+
+.verse-poetday {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    font: inherit;
+    color: var(--verse-ink);
+    background: var(--verse-card);
+    border: 1px solid var(--verse-line);
+    border-radius: 14px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color 150ms ease;
+}
+
+.verse-poetday:hover {
+    border-color: var(--verse-accent);
+}
+
+.verse-poetday:disabled {
+    cursor: default;
+}
+
+.verse-poetday-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.verse-poetday-name {
+    font-family: var(--verse-serif);
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.verse-poetday-sub {
+    font-size: 13px;
+    color: var(--verse-ink-soft);
+}
+
+.verse-newlist--row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.verse-newlist--row li {
+    border: 1px solid var(--verse-line);
+    border-radius: 12px;
+    background: var(--verse-card);
+    padding: 0 12px;
+}
+
+.verse-quoteday .verse-quote-link {
+    font-size: inherit;
+    color: inherit;
+    display: block;
+    text-align: left;
+}
+
+.verse-quoteday .verse-quote-link:hover {
+    color: var(--verse-accent);
+}
+
+/* poet of the day as a slim row above "Six for today" */
+.verse-poetday--row {
+    margin-bottom: 14px;
+    background: linear-gradient(90deg, var(--verse-accent-soft) 0%, var(--verse-card) 55%);
+}
+
+.verse-poetday-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--verse-accent);
+    white-space: nowrap;
+    margin-right: 4px;
+}
+
+.verse-poetday-go {
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--verse-accent);
+    white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+    .verse-poetday--row {
+        flex-wrap: wrap;
+    }
+
+    .verse-poetday-label {
+        flex-basis: 100%;
+    }
+
+    .verse-poetday-go {
+        display: none;
+    }
+}

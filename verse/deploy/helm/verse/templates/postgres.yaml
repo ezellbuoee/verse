@@ -1,0 +1,62 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "verse.name" . }}-postgres
+  labels: {{- include "verse.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  selector: {{- include "verse.selector" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+  ports: [ { name: pg, port: 5432 } ]
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "verse.name" . }}-postgres
+  labels: {{- include "verse.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "verse.name" . }}-postgres
+  replicas: 1
+  selector:
+    matchLabels: {{- include "verse.selector" . | nindent 6 }}
+      app.kubernetes.io/component: postgres
+  template:
+    metadata:
+      labels: {{- include "verse.selector" . | nindent 8 }}
+        app.kubernetes.io/component: postgres
+    spec:
+      securityContext: { fsGroup: 999 }
+      containers:
+        - name: postgres
+          image: {{ .Values.postgres.image }}
+          env:
+            - { name: POSTGRES_DB, value: {{ .Values.postgres.database | quote }} }
+            - { name: POSTGRES_USER, value: {{ .Values.postgres.username | quote }} }
+            - { name: POSTGRES_PASSWORD, valueFrom: { secretKeyRef: { name: {{ include "verse.name" . }}-db, key: password } } }
+            - { name: PGDATA, value: /var/lib/postgresql/data/pgdata }
+          ports: [ { name: pg, containerPort: 5432 } ]
+          readinessProbe:
+            exec: { command: ["sh", "-c", "pg_isready -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\""] }
+            periodSeconds: 5
+          resources: {{- toYaml .Values.postgres.resources | nindent 12 }}
+          volumeMounts:
+            - { name: data, mountPath: /var/lib/postgresql/data }
+            {{- if .Values.backup.enabled }}
+            # the nightly dumps, read-only: binds the backup volume at install and makes restores a kubectl exec
+            - { name: backups, mountPath: /backups, readOnly: true }
+            {{- end }}
+      {{- if .Values.backup.enabled }}
+      volumes:
+        - name: backups
+          persistentVolumeClaim: { claimName: {{ include "verse.name" . }}-backups }
+      {{- end }}
+  volumeClaimTemplates:
+    - metadata: { name: data }
+      spec:
+        accessModes: [ ReadWriteOnce ]
+        {{- if .Values.postgres.storageClass }}
+        storageClassName: {{ .Values.postgres.storageClass }}
+        {{- end }}
+        resources: { requests: { storage: {{ .Values.postgres.storage }} } }
+{{- end }}
